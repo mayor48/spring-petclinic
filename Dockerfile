@@ -23,3 +23,4 @@ EXPOSE 8080
 
 # Use “java -jar” to run
 ENTRYPOINT ["java","-jar","/opt/app/app.jar"]
+
