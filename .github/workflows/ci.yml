@@ -37,7 +37,7 @@ jobs:
           
       - name: Show report files
         if: always()
-        run: find target -name "*.html" | head 
+        run: find target -iname "surefire*" -not -path "*/classes/*" 
 
       - name: Publish report to S3
         if: always()
