@@ -42,7 +42,6 @@ jobs:
       - name: Publish report to S3
         if: always()
         run: |
-          aws s3 sync target/surefire-reports \
-            s3://unit-test-report-steve/unit-tests/${{ github.run_id }}/xml
-          aws s3 cp target/site/surefire-report.html \
-            s3://unit-test-report-steve/unit-tests/${{ github.run_id }}/index.html
+          DEST=s3://unit-test-report-steve/unit-tests/${{ github.run_id }}
+          aws s3 sync target/surefire-reports $DEST/xml
+          aws s3 cp target/reports/surefire.html $DEST/index.html
