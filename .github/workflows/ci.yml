@@ -22,3 +22,23 @@ jobs:
 
       - name: Run tests
         run: ./mvnw --batch-mode test
+
+      - name: Generate HTML report
+        if: always()
+        run: ./mvnw --batch-mode surefire-report:report-only
+
+      - name: Configure AWS credentials
+        if: always()
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-north-1
+
+      - name: Publish report to S3
+        if: always()
+        run: |
+          aws s3 sync target/surefire-reports \
+            s3://unit-test-report-steve/unit-tests/${{ github.run_id }}/xml
+          aws s3 cp target/site/surefire-report.html \
+            s3://unit-test-report-steve/unit-tests/${{ github.run_id }}/index.html
